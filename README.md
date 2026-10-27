@@ -13,6 +13,8 @@ curl -fsSL https://raw.githubusercontent.com/IncomeStreamSurfer/seo-night-skill/
 
 Then open your website's repo and run `/seo-night`.
 
+> 🎯 **The skill gets its keyword data from Semrush.** No account? **[Start a 14-day free trial of Semrush One →](https://semrush.sjv.io/JkmbYa)**
+
 ---
 
 ## Results
