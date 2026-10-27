@@ -25,8 +25,11 @@ them.
    or llms.txt is worse than none, because AI search repeats it.
 4. **One page per keyword.** Before targeting a keyword, check no other page already targets it.
    Two pages on one keyword split the ranking (cannibalisation).
-5. **Keep the brand voice.** Slogans become the sub-headline, never deleted. The keyword goes in
-   the H1 once, naturally. No stuffing, no keyword lists in footers, no hidden text.
+5. **Keep the brand voice.** Slogans are moved, never deleted: into the sub-headline, or the
+   bold first line of the intro if there is no sub-headline. The keyword goes in the H1 once,
+   naturally, at about the same length as the old heading so the layout still fits. For H2s,
+   use "Keyword: *slogan*" or a plain question. No stuffing, no keyword lists in footers, no
+   hidden text.
 6. **Don't touch booking, checkout, auth or payments code.** SEO lives in content, metadata,
    structured data, routing for public pages, and crawl files.
 7. **Run straight through.** Everything happens on a branch the user reviews before merging, so
@@ -40,6 +43,10 @@ them.
   pages router), Astro, WordPress, Shopify and static sites.
 - Find the business facts: an existing `site.ts`/config, CMS seeds, the homepage, the footer.
 - Find the domain, its country, and the canonical host (www or not).
+- Look for env files (`.env`, `.env.local`). A build may read production data with them; that's
+  fine for reading, but never write to a database, run migrations or seeds, or edit env files.
+- Find out where page content really comes from. If a CMS or database can override the code,
+  your repo changes may not show. Step 5 checks this.
 - Pick the data source for keywords:
   - **Semrush MCP** (a connected MCP server whose tools mention Semrush, in Claude Code,
     OpenCode or any other agent): use it. It gives search volume,
@@ -80,8 +87,11 @@ baseline. Sites often have some SEO done already; this is how you pick up only w
 | 6 Landing pages from keyword data | … | … |
 | 7 Plumbing (sitemap, robots, noindex, IndexNow, AI tracking) | … | … |
 
-Judge "done" by what the live pages serve (fetch them), not by what the code seems to intend.
-A title with the keyword and an H1 that is a slogan is "partial".
+Judge by what the live pages serve (fetch them), not by what the code seems to intend:
+- **done:** every money page passes that move.
+- **partial:** some pages pass. For example, the titles carry the keyword but the H1s are
+  slogans, or a page has no H2 with a keyword to put an answer under.
+- **missing:** no page passes.
 
 ## Step 3: The keyword map
 
@@ -104,7 +114,9 @@ they review the branch.
 
 ## Step 4: The moves (one commit each)
 
-Do them in this order. Skip a move the audit showed is already done well, and say so.
+Do them in this order. Skip a move the audit showed is already done well, and say so. Moves 1
+and 6 are one commit per page; moves 3, 4, 5 and 7 can be one commit per kind of change across
+pages.
 
 1. **Keyword headings.** Title, H1, H2s and meta description on each money page carry its
    keyword. Brand name once in the title (check the layout template doesn't double it).
@@ -120,13 +132,20 @@ Do them in this order. Skip a move the audit showed is already done well, and sa
    - JSON-LD for the business: the right type (LocalBusiness subtype, Organization, Product),
      quotable hard facts as properties, correct geo coordinates (check them), phone in E.164.
    - `sameAs`: only real, live profile URLs (Google Business, Wikidata, directories, socials).
-     Never a broken or draft URL.
+     Never a broken or draft URL. Strip tracking query strings (`?igsh=`, `?utm_`), and resolve
+     share links to the real profile URL.
+   - Geo: look the address up (OpenStreetMap Nominatim:
+     `https://nominatim.openstreetmap.org/search?q=<address>&format=json`) and compare. If the
+     site's coordinates are off, flag it with both points; don't change a fact on your own.
 5. **Internal links and FAQs.** Guides ↔ booking pages both ways, a Guides group in the footer,
    FAQ sections with FAQPage schema on the money pages.
 6. **New landing pages from the keyword map.** Only where volume, difficulty and product fit all
-   say yes. Each with its own keyword, answer-first intro, FAQ and schema, wired into the
+   say yes. A town the business isn't in ("sauna york" for a sauna 75 minutes away) is not a
+   landing page: that's a doorway page Google penalises. Put nearby towns and drive times into a
+   passage on an existing page instead. Each with its own keyword, answer-first intro, FAQ and schema, wired into the
    sitemap and footer.
-7. **Plumbing.** Every public page in the sitemap; robots.txt served statically; no stray
+7. **Plumbing.** Every public page in the sitemap; robots.txt served statically or by a
+   build-time route (Next.js `app/robots.ts` counts); no stray
    noindex; one canonical host; IndexNow key file plus a submit script that reads the sitemap
    (`references/indexnow.md`); AI-referral tracking if analytics exists (tag the session with
    the AI source from the referrer: chatgpt.com, perplexity.ai, gemini.google.com,
@@ -134,10 +153,14 @@ Do them in this order. Skip a move the audit showed is already done well, and sa
 
 ## Step 5: Verify
 
-- The project builds (`npm run build` or the stack's equivalent) and lints clean.
+- The project builds (`npm run build` or the stack's equivalent), and lint shows no new errors
+  or warnings compared with main.
 - Run it locally and fetch each changed page: one H1, the title and meta you meant, JSON-LD that
   parses (`JSON.parse` each `application/ld+json` block), FAQ markup matching the visible FAQ.
 - `/robots.txt`, `/sitemap.xml` and `/llms.txt` return 200 and list what they should.
+- **CMS check:** any change you made that doesn't appear on the locally served page is
+  overridden by a CMS or database. List each one for the user with the page, the field and the
+  exact value to paste in the admin.
 - `git log --oneline main..` reads as a clear report.
 
 ## Step 6: Hand over
