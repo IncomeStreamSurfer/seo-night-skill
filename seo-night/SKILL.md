@@ -64,6 +64,22 @@ Write `seo-night/baseline.md` in the repo (commit it first, on the branch). It i
   canonical host consistent, trailing-slash duplicates.
 - Analytics present? (PostHog, GA4, Plausible) and whether AI-assistant referrals are tracked.
 
+Then score the site against the moves in step 4 and put the scorecard at the top of the
+baseline. Sites often have some SEO done already; this is how you pick up only what's missing:
+
+| Move | Status | Evidence |
+|---|---|---|
+| 1 Keyword headings | done / partial / missing | e.g. titles carry keywords, but every H1 is a slogan |
+| 2 Guide pages | … | … |
+| 3 Answer-first passages | … | … |
+| 4 Citable by AI (llms.txt, JSON-LD, sameAs) | … | … |
+| 5 Internal links + FAQs | … | … |
+| 6 Landing pages from keyword data | … | … |
+| 7 Plumbing (sitemap, robots, noindex, IndexNow, AI tracking) | … | … |
+
+Judge "done" by what the live pages serve (fetch them), not by what the code seems to intend.
+A title with the keyword and an H1 that is a slogan is "partial".
+
 ## Step 3: The keyword map, then the checkpoint
 
 For each money page: one primary keyword and two to four secondaries, with volume and difficulty.
