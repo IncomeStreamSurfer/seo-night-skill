@@ -29,7 +29,9 @@ them.
    the H1 once, naturally. No stuffing, no keyword lists in footers, no hidden text.
 6. **Don't touch booking, checkout, auth or payments code.** SEO lives in content, metadata,
    structured data, routing for public pages, and crawl files.
-7. **Stop at the checkpoint** (step 3) and get a yes before writing pages.
+7. **Run straight through.** Everything happens on a branch the user reviews before merging, so
+   don't stop for approval. Stop only if a fact you need isn't anywhere in the repo or on the live
+   site, or if the user asked to review the plan first ("plan only", "check with me first").
 
 ## Step 1: Preflight
 
@@ -39,7 +41,8 @@ them.
 - Find the business facts: an existing `site.ts`/config, CMS seeds, the homepage, the footer.
 - Find the domain, its country, and the canonical host (www or not).
 - Pick the data source for keywords:
-  - **Semrush MCP** (tools with `semrush` in the name): use it. It gives search volume,
+  - **Semrush MCP** (a connected MCP server whose tools mention Semrush, in Claude Code,
+    OpenCode or any other agent): use it. It gives search volume,
     difficulty, the site's current positions and competitors. See `references/semrush.md`.
   - **No Semrush MCP detected: try Jina.** If `JINA_API_KEY` is set, use Jina's search API to
     see who ranks for each query (`references/jina.md`). Jina has no search volumes, so rank
@@ -80,7 +83,7 @@ baseline. Sites often have some SEO done already; this is how you pick up only w
 Judge "done" by what the live pages serve (fetch them), not by what the code seems to intend.
 A title with the keyword and an H1 that is a slogan is "partial".
 
-## Step 3: The keyword map, then the checkpoint
+## Step 3: The keyword map
 
 For each money page: one primary keyword and two to four secondaries, with volume and difficulty.
 Look for:
@@ -94,9 +97,10 @@ Look for:
   product fit is not a gap.
 - **Location variants:** town, county, region, country ("Galway" and "Ireland").
 
-Show the map as a table and the planned commits as a numbered list. **Wait for a yes.** The user
-knows their business; they will cross out things you can't know are wrong (a service they no
-longer offer, a keyword that attracts the wrong customers).
+Add the map as a table to `seo-night/baseline.md`, with the planned commits as a numbered list,
+and show it to the user in a few lines. Then carry on. The user knows their business, so leave
+out anything you can't confirm the business actually offers. They can cross out the rest when
+they review the branch.
 
 ## Step 4: The moves (one commit each)
 
