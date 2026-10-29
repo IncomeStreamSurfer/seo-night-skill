@@ -50,7 +50,13 @@ them.
 - Pick the data source for keywords:
   - **Semrush MCP** (a connected MCP server whose tools mention Semrush, in Claude Code,
     OpenCode or any other agent): use it. It gives search volume,
-    difficulty, the site's current positions and competitors. See `references/semrush.md`.
+    difficulty, the site's current positions and competitors. **It costs API units, so follow the
+    budget in `references/semrush.md`:**
+    - cache every response, and reuse it on re-runs
+    - one cheap ranking check first
+    - one batched keyword lookup
+    - free sources (the site itself, autocomplete, Search Console) for finding candidates
+    - about 1,000 units per site at most
   - **No Semrush MCP detected: try Jina.** If `JINA_API_KEY` is set, use Jina's search API to
     see who ranks for each query (`references/jina.md`). Jina has no search volumes, so rank
     keywords by Search Console impressions if the user can export them, otherwise by business
@@ -63,7 +69,8 @@ them.
 Write `seo-night/baseline.md` in the repo (commit it first, on the branch). It is what makes the
 30-day comparison possible:
 
-- Date, domain, data source used.
+- Date, domain, data source used, and the Semrush API units this run spent. Commit
+  `seo-night/semrush-cache/` alongside it, so the next run reuses it instead of paying again.
 - Every public page: URL, current `<title>`, H1, meta description, whether it has JSON-LD, FAQ,
   and an answer-first passage.
 - The keywords the site ranks for now (top 30 by traffic), with position and volume.
@@ -101,8 +108,9 @@ Look for:
 - **Striking distance:** keywords where the site sits at position 8–30. Cheapest wins.
 - **Headings with no keyword:** H1s like "Your day, your way" or "Hen Parties" on a page that
   should rank for "Wedding Venue in Galway" / "Hen Party Venue in Galway".
-- **Questions** people ask around each service (Semrush questions report, People Also Ask via
-  Jina, or the site's own enquiry emails). These become guide pages and FAQs.
+- **Questions** people ask around each service (search autocomplete, People Also Ask via Jina, the
+  site's own enquiry emails, and Semrush's questions report only if those come up short). These
+  become guide pages and FAQs.
 - **Gaps:** keywords competitors rank for that the business can honestly serve. A gap with no
   product fit is not a gap.
 - **Location variants:** town, county, region, country ("Galway" and "Ireland").
